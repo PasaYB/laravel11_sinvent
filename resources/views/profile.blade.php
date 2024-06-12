@@ -9,16 +9,16 @@
                     <div class="card-body">
                         <table class="table">
                             <tr>
-                                <td>Merk</td>
-                                <td>{{ $rsetBarangMasuk->tgl_masuk }}</td>
+                                <td>Name</td>
+                                <td>{{ $user->name }}</td>
                             </tr>
                             <tr>
-                                <td>Quantity</td>
-                                <td>{{ $rsetBarangMasuk->qty_masuk }}</td>
+                                <td>Email</td>
+                                <td>{{ $user->email }}</td>
                             </tr>
                             <tr>
-                                <td>ID - Merk Barang</td>
-                                <td>{{ $rsetBarangMasuk->barang_id }} - {{ $rsetBarangMasuk->barang->merk  }}</td>
+                                <td>Created At</td>
+                                <td>{{ $user->created_at }}</td>
                             </tr>
                         </table>
                     </div>
@@ -27,9 +27,8 @@
         </div>
         <div class="row">
             <div class="col-md-12  text-center">
-
-            <br>
-                <a href="{{ route('barangmasuk.index') }}" class="btn btn-md btn-primary mb-3">Back</a>
+                
+                <a href="{{ route('dashboard') }}" class="btn btn-md btn-primary mt-3">Back</a>
             </div>
         </div>
     </div>

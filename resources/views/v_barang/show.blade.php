@@ -1,7 +1,7 @@
 @extends('layouts.adm-main')
 
 @section('content')
-@php $pageType = 'barang'; @endphp
+
     <div class="container">
         <div class="row">
             <form class="col-md-8" action="{{ route('addToCart') }}" method="POST">

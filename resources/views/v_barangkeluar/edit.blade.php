@@ -1,7 +1,7 @@
 @extends('layouts.adm-main')
 
 @section('content')
-@php $pageType = 'barang_keluar'; @endphp
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">

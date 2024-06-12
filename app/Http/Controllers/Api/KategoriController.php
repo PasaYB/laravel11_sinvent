@@ -84,7 +84,18 @@ class KategoriController extends Controller
         ]);
 
         //return response
-        return new KategoriResource(true, 'Data Post Berhasil Diubah!', $post);
+return new KategoriResource(true, 'Data Kategori Berhasil Diubah!', $post);
+    }
+    public function destroy($id)
+    {
+
+        //find post by ID
+        $post = Kategori::find($id);
+        //delete post
+        $post->delete();
+
+        //return response
+        return new KategoriResource(true, 'Data Kategori Berhasil Dihapus!', null);
     }
     
 }

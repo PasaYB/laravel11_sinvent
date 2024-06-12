@@ -1,7 +1,7 @@
 @extends('layouts.adm-main')
 
 @section('content')
-@php $pageType = 'kategori'; @endphp
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -34,7 +34,7 @@
                                 <div class="form-check">
                                     <select class="form-select" name="kategori" aria-label="Default select example">
                                         <option value="blank" selected>Pilih Kategori</option>
-                                        <option value="M">M - Modal</option>
+                                        <option value="M">M - Modal Barang</option>
                                         <option value="A">A - Alat</option>
                                         <option value="BHP">BHP - Barang Habis Pakai</option>
                                         <option value="BTHP">BTHP - Barang Tidak Habis Pakai</option>

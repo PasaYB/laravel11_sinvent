@@ -7,16 +7,29 @@ use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
 use App\Models\Barang;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class BarangKeluarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $namaProduk = BarangKeluar::with('barang')->get();
-        $rsetBarangKeluar = BarangKeluar::all();
+        $searchTerm = $request->input('search');
+
+        if ($searchTerm) {
+        $rsetBarangKeluar = BarangKeluar::where('tgl_keluar', 'like', '%' . $searchTerm . '%')
+            ->orWhere('qty_keluar', 'like', '%' . $searchTerm . '%')
+            ->orWhere('id', 'like', '%' . $searchTerm . '%')
+            ->orWhereHas('barang', function ($query) use ($searchTerm) {
+                $query->where('id', 'like', '%' . $searchTerm . '%');
+            })
+            ->get();
+        } else {
+            $rsetBarangKeluar = BarangKeluar::all();
+        }
+
         return view('v_barangkeluar.index', compact('rsetBarangKeluar'));
     }
 
@@ -78,11 +91,28 @@ class BarangKeluarController extends Controller
         }
 
         // Buat data barang keluar
-        BarangKeluar::create([
-            'tgl_keluar' => $request->tgl_keluar,
-            'qty_keluar' => $request->qty_keluar,
-            'barang_id' => $request->barang_id,
-        ]);
+        try {
+            DB::beginTransaction(); // Mulai transaksi
+    
+            // Sisipkan data baru ke tabel kategori
+            DB::table('barangkeluar')->insert([
+                'tgl_keluar' => $request->tgl_keluar,
+                'qty_keluar' => $request->qty_keluar,
+                'barang_id' => $request->barang_id,
+            ]);
+            DB::commit(); // Commit perubahan jika berhasil
+        } catch (\Exception $e) {
+            // Laporkan kesalahan
+            report($e);
+                
+            // Rollback perubahan jika terjadi kesalahan
+            DB::rollBack();
+    
+            // Kembali ke halaman pembuatan kategori dengan pesan error
+            return redirect()->route('barangkeluar.create')->with([
+                'error' => 'Terjadi kesalahan saat menyimpan data! Kesalahan: ' . $e->getMessage()
+            ]);
+        }
 
         // Kurangi stok barang
         $barang->stok -= $request->qty_keluar;

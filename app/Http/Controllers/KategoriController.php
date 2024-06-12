@@ -10,27 +10,42 @@ use Illuminate\Support\Facades\DB;
 
 class KategoriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // public function index(Request $request)
+    // {
+        
+    //     //return $rsetKategori;
+    //     if ($request->search){
+    //         $rsetKategori = DB::table('kategori')->select('id','deskripsi',DB::raw('getKategori(kategori) as kat'))
+    //                                              ->where('id','like','%'.$request->search.'%')
+    //                                              ->orWhere('deskripsi','like','%'.$request->search.'%')
+    //                                              ->paginate(10);
+    //     }else {
+    //         $rsetKategori = DB::table('kategori')->select('id','deskripsi',DB::raw('getKategori(kategori) as kat'))->paginate(10);
+    //     }
+    //     //return $request->search;
+    //     return view('v_kategori.index',compact('rsetKategori'));
+      
+    // }
+    public function index(Request $request)
     {
-        // $rsetKategori = Kategori::latest()->paginate(10);
-        // return view('v_Kategori.index',compact('rsetKategori'));
-
-        // return view('vsiswa.index');
-
-        $rsetKategori = Kategori::all();
-        return view('v_kategori.index',compact('rsetKategori'));
+        if ($request->search) {
+            $rsetKategori = DB::table('kategori')
+                            ->select('id', 'deskripsi', DB::raw('getKategori(kategori) as kat'))
+                            ->where('id', 'like', '%' . $request->search . '%')
+                            ->orWhere('deskripsi', 'like', '%' . $request->search . '%')
+                            ->orWhere('kategori', 'like', '%' . $request->search . '%')
+                            ->paginate(10);
+        } else {
+            $rsetKategori = DB::table('vKategori')
+                            ->select('id', 'deskripsi','kat')
+                            ->paginate(10);
+        }
+        return view('v_kategori.index', compact('rsetKategori'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $akategori = array('blank'=>'Pilih Kategori',
-                            'M'=>'Kategori Modal',
+                            'M'=>'Modal Barang',
                             'A'=>'Alat',
                             'BHP'=>'Bahan Habis Pakai',
                             'BTHP'=>'Bahan Tidak Habis Pakai'
@@ -43,28 +58,49 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'deskripsi' => 'required',
             'kategori' => 'required',
         ]);
-
+    
+        // Periksa apakah entri sudah ada
         $exists = Kategori::where('deskripsi', $request->deskripsi)
                           ->where('kategori', $request->kategori)
                           ->exists();
-
+    
         if ($exists) {
             return redirect()->route('kategori.create')->with(['error' => 'Deskripsi dan Kategori sudah ada!']);
         }
-
-        // Create post
-        Kategori::create([
-            'deskripsi' => $request->deskripsi,
-            'kategori' => $request->kategori,
-        ]);
-
-        // Redirect to index
+    
+        // Buat entri baru dalam transaksi
+        try {
+            DB::beginTransaction(); // Mulai transaksi
+    
+            // Sisipkan data baru ke tabel kategori
+            DB::table('kategori')->insert([
+                'deskripsi' => $request->deskripsi,
+                'kategori' => $request->kategori,
+            ]);
+    
+            DB::commit(); // Commit perubahan jika berhasil
+        } catch (\Exception $e) {
+            // Laporkan kesalahan
+            report($e);
+    
+            // Rollback perubahan jika terjadi kesalahan
+            DB::rollBack();
+    
+            // Kembali ke halaman pembuatan kategori dengan pesan error
+            return redirect()->route('kategori.create')->with([
+                'error' => 'Terjadi kesalahan saat menyimpan data! Kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    
+        // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('kategori.index')->with(['success' => 'Data Berhasil Disimpan!']);
     }
+    
 
     /**
      * Display the specified resource.
@@ -74,7 +110,14 @@ class KategoriController extends Controller
         $rsetKategori = Kategori::find($id);
         return view('v_kategori.show', compact('rsetKategori'));
     }
-
+    // public function show(string $id)
+    // {
+    //     $rsetKategori = DB::select('call getKategoriById(?)',[$id]);
+        
+    //     dd($rsetKategori);
+    //     return view('v_kategori.show', compact('rsetKategori'));
+    // }
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -82,7 +125,7 @@ class KategoriController extends Controller
     {
         $akategori = array(
             'blank' => 'Pilih Kategori',
-            'M' => 'M - Modal',
+            'M' => 'M - Modal Barang',
             'A' => 'A - Alat',
             'BHP' => 'BHP - Bahan Habis Pakai',
             'BTHP' => 'BTHP - Bahan Tidak Habis Pakai'
@@ -130,5 +173,16 @@ class KategoriController extends Controller
             return redirect()->route('kategori.index')->with(['Success' => 'Berhasil dihapus']);
         }
     }
+    public function search(Request $request)
+    {
+        $searchTerm = $request->input('search');
+        $rsetKategori = Kategori::where('deskripsi', 'like', '%' . $searchTerm . '%')
+            ->orWhere('id', 'like', '%' . $searchTerm . '%')
+            ->get();
+    
+        return view('v_kategori.index', compact('rsetKategori'));
+    }
+    
+    
 
 }

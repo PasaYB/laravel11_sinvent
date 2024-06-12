@@ -1,15 +1,27 @@
 @extends('layouts.adm-main')
 
 @section('content')
-@php $pageType = 'barang_keluar'; @endphp
-    <div class="container">
+<div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <a href="{{ route('barangkeluar.create') }}" class="btn btn-md btn-success mb-3">TAMBAH BARANG KELUAR</a>
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="{{ route('barangkeluar.create') }}" class="btn btn-md btn-success">TAMBAH BARANG KELUAR</a>
+                        <form action="/barangkeluar" method="GET" class="d-flex">
+                                @csrf
+                        <div class="input-group">
+                         <input type="text" name="search" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                </div>
+            </form>
                     </div>
                 </div>
+            </div>
                 @if(session('Success'))
                     <div class="alert alert-success">
                         {{ session('Success') }}

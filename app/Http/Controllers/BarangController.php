@@ -13,11 +13,25 @@ class BarangController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rsetBarang = Barang::all();
-        $namaProduk = Barang::with('kategori')->get();
-        return view('v_barang.index', compact('rsetBarang', 'namaProduk'));
+        $searchTerm = $request->input('search');
+
+        if ($searchTerm) {
+            $rsetBarang = Barang::where('id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('merk', 'like', '%' . $searchTerm . '%')
+                ->orWhere('seri', 'like', '%' . $searchTerm . '%')
+                ->orWhere('spesifikasi', 'like', '%' . $searchTerm . '%')
+                ->orWhere('stok', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('kategori', function ($query) use ($searchTerm) {
+                    $query->where('kategori_id', 'like', '%' . $searchTerm . '%');
+                })
+                ->get();
+        } else {
+            $rsetBarang = Barang::all();
+        }
+
+        return view('v_barang.index', compact('rsetBarang'));
     }
 
     /**
@@ -57,13 +71,29 @@ class BarangController extends Controller
         }
 
         // Create post
-        Barang::create([
-            'merk' => $request->merk,
-            'seri' => $request->seri,
-            'spesifikasi' => $request->spesifikasi,
-            'stok' => $request->stok,
-            'kategori_id' => $request->kategori_id,
-        ]);
+        try {
+            DB::beginTransaction(); // Mulai transaksi
+    
+            // Sisipkan data baru ke tabel kategori
+            DB::table('barang')->insert([
+                'merk' => $request->merk,
+                'seri' => $request->seri,
+                'spesifikasi' => $request->spesifikasi,
+                'kategori_id' => $request->kategori_id,
+            ]);
+            DB::commit(); // Commit perubahan jika berhasil
+        } catch (\Exception $e) {
+            // Laporkan kesalahan
+            report($e);
+                
+            // Rollback perubahan jika terjadi kesalahan
+            DB::rollBack();
+    
+            // Kembali ke halaman pembuatan kategori dengan pesan error
+            return redirect()->route('barang.create')->with([
+                'error' => 'Terjadi kesalahan saat menyimpan data! Kesalahan: ' . $e->getMessage()
+            ]);
+        }
 
         // Redirect to index
         return redirect()->route('barang.index')->with(['success' => 'Data Berhasil Disimpan!']);

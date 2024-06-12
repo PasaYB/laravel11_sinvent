@@ -92,5 +92,12 @@ class BarangController extends Controller
         //return response
         return new BarangResource(true, 'Data Barang Berhasil Diubah!', $post);
     }
+    public function destroy($id)
+    {
+            $post = Barang::find($id);
+            $post->delete();
+            return new BarangResource(true, 'Data Barang Berhasil Dihapus!', null);
+        
+    }
     
 }

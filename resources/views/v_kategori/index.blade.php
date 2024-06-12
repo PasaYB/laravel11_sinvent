@@ -1,15 +1,28 @@
 @extends('layouts.adm-main')
 
 @section('content')
-@php $pageType = 'kategori'; @endphp
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <a href="{{ route('kategori.create') }}" class="btn btn-md btn-success mb-3">TAMBAH KATEGORI</a>
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="{{ route('kategori.create') }}" class="btn btn-md btn-success">TAMBAH KATEGORI</a>
+                        <form action="/kategori" method="GET" class="d-flex">
+                                @csrf
+                        <div class="input-group">
+                         <input type="text" name="search" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                </div>
+            </form>
                     </div>
                 </div>
+            </div>
 
                 <table class="table table-bordered">
                     <thead>
@@ -26,7 +39,7 @@
                             <tr>
                                 <td>{{ $rowkategori->id  }}</td>
                                 <td>{{ $rowkategori->deskripsi  }}</td>
-                                <td>{{ $rowkategori->kategori  }}</td>
+                                <td>{{ $rowkategori->kat ?? 'Kategori Tidak Ditemukan'  }}</td>
                                 <td class="text-center"> 
                                     <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('kategori.destroy', $rowkategori->id) }}" method="POST">
                                         <a href="{{ route('kategori.show', $rowkategori->id) }}" class="btn btn-sm btn-dark"><i class="fa fa-eye"></i></a>

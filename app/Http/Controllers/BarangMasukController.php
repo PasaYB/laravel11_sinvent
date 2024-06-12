@@ -7,21 +7,40 @@ use App\Models\BarangMasuk;
 use App\Models\BarangKeluar;
 use App\Models\Barang;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class BarangMasukController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // $rsetBarang = Barang::latest()->paginate(10);
-        // return view('v_barang.index',compact('rsetBarang'));
+    // public function index()
+    // {
+    //     // $rsetBarang = Barang::latest()->paginate(10);
+    //     // return view('v_barang.index',compact('rsetBarang'));
 
-        // return view('vsiswa.index');
-        $namaProduk = BarangMasuk::with('barang')->get();
-        $rsetBarangMasuk = BarangMasuk::all();
-        return view('v_barangmasuk.index',compact('rsetBarangMasuk'));
+    //     // return view('vsiswa.index');
+    //     $namaProduk = BarangMasuk::with('barang')->get();
+    //     $rsetBarangMasuk = BarangMasuk::all();
+    //     return view('v_barangmasuk.index',compact('rsetBarangMasuk'));
+    // }
+    public function index(Request $request)
+    {
+        $searchTerm = $request->input('search');
+
+        if ($searchTerm) {
+        $rsetBarangMasuk = BarangMasuk::where('tgl_masuk', 'like', '%' . $searchTerm . '%')
+            ->orWhere('qty_masuk', 'like', '%' . $searchTerm . '%')
+            ->orWhere('id', 'like', '%' . $searchTerm . '%')
+            ->orWhereHas('barang', function ($query) use ($searchTerm) {
+                $query->where('id', 'like', '%' . $searchTerm . '%');
+            })
+            ->get();
+        } else {
+            $rsetBarangMasuk = BarangMasuk::all();
+        }
+
+        return view('v_barangmasuk.index', compact('rsetBarangMasuk'));
     }
 
     /**
@@ -54,11 +73,28 @@ class BarangMasukController extends Controller
 
 
         //create post
-        BarangMasuk::create([
-            'tgl_masuk'          => $request->tgl_masuk,
-            'qty_masuk'          => $request->qty_masuk,
-            'barang_id'   => $request->barang_id,
-        ]);
+        try {
+            DB::beginTransaction(); // Mulai transaksi
+    
+            // Sisipkan data baru ke tabel kategori
+            DB::table('barangmasuk')->insert([
+                'tgl_masuk' => $request->tgl_masuk,
+                'qty_masuk' => $request->qty_masuk,
+                'barang_id' => $request->barang_id,
+            ]);
+            DB::commit(); // Commit perubahan jika berhasil
+        } catch (\Exception $e) {
+            // Laporkan kesalahan
+            report($e);
+                
+            // Rollback perubahan jika terjadi kesalahan
+            DB::rollBack();
+    
+            // Kembali ke halaman pembuatan kategori dengan pesan error
+            return redirect()->route('barangmasuk.create')->with([
+                'error' => 'Terjadi kesalahan saat menyimpan data! Kesalahan: ' . $e->getMessage()
+            ]);
+        }
 
         //redirect to index
         return redirect()->route('barangmasuk.index')->with(['success' => 'Data Berhasil Disimpan!']);
