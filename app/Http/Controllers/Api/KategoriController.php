@@ -26,10 +26,10 @@ class KategoriController extends Controller
     public function index()
     {
         //get all posts
-        $posts = Kategori::all();
+        $apiKategoris = Kategori::all();
 
         //return collection of posts as a resource
-        return new KategoriResource(true, 'List Data Kategori', $posts);
+        return new KategoriResource($apiKategoris);
     }
     public function store(Request $request)
     {
@@ -46,56 +46,79 @@ class KategoriController extends Controller
 
 
         //create post
-        $post = Kategori::create([
+        $apiKategori = Kategori::create([
             'deskripsi'          => $request->deskripsi,
             'kategori'          => $request->kategori,
         ]);
 
         //return response
-        return new KategoriResource(true, 'Data Kategori Berhasil Ditambahkan!', $post);
+        return new KategoriResource($apiKategori);
     }
     public function show($id)
     {
-        //find post by ID
-        $post = Kategori::find($id);
-
-        //return single post as a resource
-        return new KategoriResource(true, 'Detail Data Kategori!', $post);
+        // Find post by ID
+        $apiKategori = Kategori::find($id);
+    
+        if (!$apiKategori) {
+            // Return error response
+            return response()->json(['status' => 'Kategori tidak ditemukan'], 404);
+        }
+    
+        // Return single post as a resource
+        return new KategoriResource($apiKategori);
     }
     public function update(Request $request, $id)
     {
-        //define validation rules
+        // Define validation rules
         $validator = Validator::make($request->all(), [
             'deskripsi' => 'required',
             'kategori' => 'required',
         ]);
-
-        //check if validation fails
+    
+        // Check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        //find post by ID
-        $post = Kategori::find($id);
-
-        $post->update([
-            'deskripsi'     => $request->deskripsi,
-            'kategori'   => $request->kategori,
+    
+        // Find post by ID
+        $apiKategori = Kategori::find($id);
+    
+        // Check if kategori is found
+        if (!$apiKategori) {
+            return response()->json(['status' => 'Kategori tidak ditemukan'], 404);
+        }
+    
+        // Update kategori
+        $apiKategori->update([
+            'deskripsi' => $request->deskripsi,
+            'kategori' => $request->kategori,
         ]);
-
-        //return response
-return new KategoriResource(true, 'Data Kategori Berhasil Diubah!', $post);
-    }
+    
+        // Return success response
+        return response()->json(['status' => 'Kategori berhasil diubah']);
+    }    
+    
     public function destroy($id)
     {
-
-        //find post by ID
-        $post = Kategori::find($id);
-        //delete post
-        $post->delete();
-
-        //return response
-        return new KategoriResource(true, 'Data Kategori Berhasil Dihapus!', null);
+        // Find post by ID
+        $apiKategori = Kategori::find($id);
+    
+        // Check if kategori is found
+        if (!$apiKategori) {
+            return response()->json(['status' => 'Kategori tidak ditemukan'], 404);
+        }
+    
+        try {
+            // Delete post  
+            $apiKategori->delete();
+    
+            // Return success response
+            return response()->json(['status' => 'Kategori berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            // Return error response
+            return response()->json(['status' => 'Kategori tidak dapat dihapus'], 500);
+        }
     }
+    
     
 }

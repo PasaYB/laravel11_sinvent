@@ -8,8 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class KategoriResource extends JsonResource
 {
     //define properti
-    public $status;
-    public $message;
     public $resource;
 
     /**
@@ -20,11 +18,9 @@ class KategoriResource extends JsonResource
      * @param  mixed $resource
      * @return void
      */
-    public function __construct($status, $message, $resource)
+    public function __construct($resource)
     {
         parent::__construct($resource);
-        $this->status  = $status;
-        $this->message = $message;
     }
 
     /**
@@ -36,8 +32,6 @@ class KategoriResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'success'   => $this->status,
-            'message'   => $this->message,
             'data'      => $this->resource
         ];
     }

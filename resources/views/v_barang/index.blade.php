@@ -39,7 +39,7 @@
                             <th>ID</th>
                             <th>Merk</th>
                             <th>Seri</th>
-                            <th>Spesifikasi</th>
+                            <th>Jenis</th>
                             <th>Stok</th>
                             <th>ID - Deskripsi</th>
                             <th style="width: 15%">AKSI</th>

@@ -9,5 +9,4 @@ Route::get('/user', function (Request $request) {
 })->middleware(Authenticate::using('sanctum'));
 
 //posts
-Route::apiResource('/barang', App\Http\Controllers\Api\BarangController::class);
 Route::apiResource('/kategori', App\Http\Controllers\Api\KategoriController::class);
