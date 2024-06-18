@@ -8,19 +8,20 @@
                <div class="card border-0 shadow rounded">
                     <div class="card-body">
                         <table class="table">
-                            <tr>
-                                <td>ID</td>
-                                <td>{{ $rsetKategori->id }}</td>
-                            </tr>
-                            <tr>
-                                <td>Merk</td>
-                                <td>{{ $rsetKategori->deskripsi }}</td>
-                            </tr>
-                            <tr>
-                                <td>Seri</td>
-                                <td>{{ $rsetKategori->kategori }}</td>
-                            </tr>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>{{ $rsetKategori->id }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Deskripsi</td>
+                                    <td>{{ $rsetKategori->deskripsi }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kategori</td>
+                                    <td>{{ $rsetKategori->kat }}</td>
+                                </tr>
                         </table>
+
                     </div>
                </div>
             </div>

@@ -106,17 +106,26 @@ class KategoriController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        $rsetKategori = Kategori::find($id);
-        return view('v_kategori.show', compact('rsetKategori'));
-    }
-    // public function show(string $id)
     // {
-    //     $rsetKategori = DB::select('call getKategoriById(?)',[$id]);
-        
-    //     dd($rsetKategori);
+    //     $rsetKategori = Kategori::find($id);
     //     return view('v_kategori.show', compact('rsetKategori'));
     // }
+    // {
+    //     $rsetKategori = DB::table('kategori')
+    //         ->select('id', 'deskripsi', DB::raw('getKategori(kategori) as kat'))
+    //         ->where('id', $id)
+    //         ->first();
+    
+    //     return view('v_kategori.show', compact('rsetKategori'));
+    // }
+    {
+        // $rsetKategori = DB::select('call getKategoriById(?)',[$id]);
+        
+        // return view('v_kategori.show', compact('rsetKategori'));
+        $rsetKategori = DB::selectOne('call getKategoriById(?)', [$id]);
+        return view('v_kategori.show', compact('rsetKategori'));
+
+    }
     
     /**
      * Show the form for editing the specified resource.
@@ -186,3 +195,4 @@ class KategoriController extends Controller
     
 
 }
+

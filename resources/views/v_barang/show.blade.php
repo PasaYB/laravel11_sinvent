@@ -4,7 +4,6 @@
 
     <div class="container">
         <div class="row">
-            <form class="col-md-8" action="{{ route('addToCart') }}" method="POST">
             <div class="col-md-8">
                <div class="card border-0 shadow rounded">
                     <div class="card-body">
@@ -47,7 +46,6 @@
 
                 <a href="{{ route('barang.index') }}" class="btn btn-md btn-primary mt-3">Back</a>
             </div>
-</form>
         </div>
     </div>
 @endsection
