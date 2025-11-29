@@ -1,66 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div style="font-family: sans-serif; line-height: 1.6;">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+  <h1 style="font-size: 28px; margin-bottom: 10px;">📦 Sistem Inventory / Admin Stok Barang</h1>
 
-## About Laravel
+  <p>
+    Aplikasi berbasis <strong>Laravel 11</strong> yang berfungsi sebagai 
+    <strong>sistem manajemen inventory</strong>, digunakan untuk mengelola dan memantau 
+    <strong>barang masuk</strong> dan <strong>barang keluar</strong>.  
+    Proyek ini menggunakan <strong>admin template</strong> agar tampilan dashboard lebih modern, responsif, 
+    dan mudah digunakan oleh admin.
+  </p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+  <h2>✨ Fitur Utama</h2>
+  <ul>
+    <li>Manajemen data master barang (tambah, edit, hapus).</li>
+    <li>Pencatatan <strong>Barang Masuk</strong> secara detail.</li>
+    <li>Pencatatan <strong>Barang Keluar</strong> untuk tracking stok keluar.</li>
+    <li>Dashboard admin menggunakan template UI agar lebih rapi dan user-friendly.</li>
+    <li>CRUD lengkap untuk kategori, barang, serta transaksi.</li>
+    <li>Sistem autentikasi Laravel (Login & akses admin).</li>
+  </ul>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+  <h2>🛠️ Teknologi & Stack</h2>
+  <ul>
+    <li><strong>Laravel 11</strong> — backend utama aplikasi.</li>
+    <li><strong>Blade Template + Admin Template</strong> — tampilan UI/UX.</li>
+    <li><strong>MySQL / MariaDB</strong> — database (ikuti konfigurasi di <code>.env</code>).</li>
+    <li>Composer & NPM untuk dependency management.</li>
+  </ul>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+  <h2>📁 Struktur Folder Utama</h2>
+  <pre style="background: #f6f8fa; padding: 12px; border-radius: 6px;">
+app/          — Backend (Controllers, Models, Middleware)
+config/       — Konfigurasi aplikasi
+database/     — Migration & seeders
+public/       — Assets publik & file template admin
+resources/    — Views (Blade), components, dll
+routes/       — route web & api
+  </pre>
 
-## Learning Laravel
+  <h2>🚀 Cara Menjalankan Proyek</h2>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+  <h3>1. Clone Repository</h3>
+  <pre style="background: #f6f8fa; padding: 12px; border-radius: 6px;">
+git clone https://github.com/PasaYB/laravel11_sinvent
+cd laravel11_sinvent
+  </pre>
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+  <h3>2. Install Dependencies</h3>
+  <pre style="background: #f6f8fa; padding: 12px; border-radius: 6px;">
+composer install
+npm install
+  </pre>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+  <h3>3. Setup Environment</h3>
+  <pre style="background: #f6f8fa; padding: 12px; border-radius: 6px;">
+cp .env.example .env
+php artisan key:generate
+  </pre>
 
-## Laravel Sponsors
+  <h3>4. Migrasi Database</h3>
+  <pre style="background: #f6f8fa; padding: 12px; border-radius: 6px;">
+php artisan migrate
+  </pre>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+  <h3>5. Jalankan Server</h3>
+  <pre style="background: #f6f8fa; padding: 12px; border-radius: 6px;">
+php artisan serve
+  </pre>
 
-### Premium Partners
+  <p>Aplikasi kini dapat diakses melalui:  
+    <code>http://localhost:8000</code>
+  </p>
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+  <h2>📌 Tujuan Proyek</h2>
+  <p>
+    Proyek ini dibuat sebagai sarana belajar Laravel 11 sekaligus membangun 
+    aplikasi admin inventory yang bisa dikembangkan menjadi sistem yang lebih kompleks 
+    seperti manajemen supplier, laporan stok, dan integrasi API.
+  </p>
 
-## Contributing
+  <hr>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+</div>
